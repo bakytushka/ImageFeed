@@ -16,6 +16,7 @@
 		8A023E012B7707B30018F67D /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A023E002B7707B30018F67D /* ImagesListCell.swift */; };
 		8A3BB08B2B90F0C80075D4E6 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3BB08A2B90F0C80075D4E6 /* SingleImageViewController.swift */; };
 		8AC456372B8E62BF00C1F463 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC456362B8E62BF00C1F463 /* ProfileViewController.swift */; };
+		8ACD46752B9FBA100064557B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACD46742B9FBA100064557B /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		8A023E002B7707B30018F67D /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		8A3BB08A2B90F0C80075D4E6 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		8AC456362B8E62BF00C1F463 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		8ACD46742B9FBA100064557B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 		8A023E022B7708190018F67D /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
+				8ACD46742B9FBA100064557B /* Constants.swift */,
 				8A023E002B7707B30018F67D /* ImagesListCell.swift */,
 				8A023DF02B71827E0018F67D /* ImagesListViewController.swift */,
 			);
@@ -175,6 +178,7 @@
 				8A023E012B7707B30018F67D /* ImagesListCell.swift in Sources */,
 				8AC456372B8E62BF00C1F463 /* ProfileViewController.swift in Sources */,
 				8A023DED2B71827E0018F67D /* AppDelegate.swift in Sources */,
+				8ACD46752B9FBA100064557B /* Constants.swift in Sources */,
 				8A3BB08B2B90F0C80075D4E6 /* SingleImageViewController.swift in Sources */,
 				8A023DEF2B71827E0018F67D /* SceneDelegate.swift in Sources */,
 			);
