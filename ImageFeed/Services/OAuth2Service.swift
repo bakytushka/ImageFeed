@@ -58,7 +58,6 @@ final class OAuth2Service {
             do {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                // Сохраняем полученный токен в хранилище
                 OAuth2TokenStorage.shared.token = response.accessToken
                 DispatchQueue.main.async {
                     completion(.success(response.accessToken))

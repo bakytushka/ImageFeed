@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 struct OAuthTokenResponseBody: Decodable {
     let accessToken: String
@@ -20,5 +19,4 @@ struct OAuthTokenResponseBody: Decodable {
         case scope = "scope"
         case createdAt = "created_at"
     }
-    
 }
