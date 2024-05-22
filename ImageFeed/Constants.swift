@@ -1,7 +1,3 @@
-//
-//  Constants.swift
-//  ImageFeed
-//
 //  Created by Bakyt Temishov on 11.03.2024.
 //
 

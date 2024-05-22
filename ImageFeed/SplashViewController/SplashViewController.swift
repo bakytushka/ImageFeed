@@ -14,12 +14,17 @@ final class SplashViewController: UIViewController {
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage()
     
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let token = oauth2TokenStorage.token
-        if token != nil {
-            switchToTabBarController()
+        //let token = oauth2TokenStorage.token
+       // if token != nil {
+            //switchToTabBarController()
+        if let token = OAuth2TokenStorage().token {
+            fetchProfile(token)
         } else {
             performSegue(withIdentifier: ShowAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -58,6 +63,7 @@ extension SplashViewController {
 
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        UIBlockingProgressHUD.show()
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             self.fetchOAuthToken(code)
@@ -65,17 +71,46 @@ extension SplashViewController: AuthViewControllerDelegate {
     }
     
     private func fetchOAuthToken(_ code: String) {
-        ProgressHUD.show()
         oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
             guard let self = self else { return }
             
-            ProgressHUD.dismiss()
+            
             
             switch result {
-            case .success:
-                self.switchToTabBarController()
+            case .success(let token):
+                self.fetchProfile(token)
+               // UIBlockingProgressHUD.dismiss()
             case .failure:
+                UIBlockingProgressHUD.dismiss()
                 // TODO [Sprint 11]
+                break
+            }
+        }
+    }
+    
+    func didAuthenticate(_ vc: AuthViewController) {
+        vc.dismiss(animated: true)
+        
+        guard let token = oauth2TokenStorage.token else {
+            return
+        }
+        
+        fetchProfile(token)
+    }
+    
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile(token) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self = self else { return }
+            
+            switch result {
+            case .success (let user):
+                self.profileImageService.fetchProfileImageURL(username: user.username, token: token) { _ in }
+                self.switchToTabBarController()
+                
+            case .failure:
                 break
             }
         }
