@@ -18,23 +18,6 @@ final class ProfileImageService {
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     func fetchProfileImageURL(username: String, token: String, _ completion: @escaping (Result<String, Error>) -> Void) {
-      //task?.cancel()
-        
- /*       guard let token = oauth2TokenStorage.token else {
-            let error = NetworkError.invalidAccessToken
-            print("[fetchProfileImageURL]: \(error)")
-            completion(.failure(error))
-            return
-        }
-        
-        guard let request = createURLRequest(username: username, token: token) else {
-            let error = NetworkError.urlSessionError
-            print("[fetchProfileImageURL]: \(error) - username: \(username), token: \(token)")
-            completion(.failure(error))
-            return
-  
-        }
-        */
         guard let request = createURLRequest(username: username, token: token) else { return }
         
         assert(Thread.isMainThread)
@@ -42,30 +25,32 @@ final class ProfileImageService {
         if task != nil {
             task?.cancel()
         }
-            
+        
         task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<UserResult, Error>)  in
             
             self?.task = nil
             switch response {
             case .success(let body):
-                self?.avatarURL = body.profile_image?.small
-                completion(.success((self?.avatarURL)!))
-                // ПОПРАВИТЬ ФОРСАНРАП
+                if let smallURL = body.profileImage?.small {
+                    self?.avatarURL = smallURL
+                    completion(.success(smallURL))
+                    
+                    NotificationCenter.default
+                        .post(
+                            name: ProfileImageService.didChangeNotification,
+                            object: self,
+                            userInfo: ["URL": smallURL])
+                } else {
+                    print("Profile image URL is nil")
+                }
                 
-                NotificationCenter.default
-                    .post(
-                        name: ProfileImageService.didChangeNotification,
-                        object: self,
-                        userInfo: ["URL": self?.avatarURL as Any])
             case .failure(let error):
                 print("[ProfileImageService]: \(error.localizedDescription) \(request)")
                 completion(.failure(error))
             }
         }
-        
         task?.resume()
     }
-    
     
     private func createURLRequest(username: String, token: String) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/users/\(username)") else { return nil }

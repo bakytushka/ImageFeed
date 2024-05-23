@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="JRn-Bj-BTU">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -127,10 +127,10 @@
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E0P-ad-Rht" userLabel="Back Button">
-                                <rect key="frame" x="8" y="56" width="48" height="48"/>
+                                <rect key="frame" x="9" y="57" width="24" height="24"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="LjD-DG-Rnm"/>
-                                    <constraint firstAttribute="width" constant="48" id="YLe-1k-sly"/>
+                                    <constraint firstAttribute="height" constant="24" id="LjD-DG-Rnm"/>
+                                    <constraint firstAttribute="width" constant="24" id="YLe-1k-sly"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="backwardIcon"/>
@@ -150,13 +150,13 @@
                         <viewLayoutGuide key="safeArea" id="EgW-2p-dX6"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="E0P-ad-Rht" firstAttribute="leading" secondItem="EgW-2p-dX6" secondAttribute="leading" constant="8" id="0mx-wZ-9Gn"/>
+                            <constraint firstItem="E0P-ad-Rht" firstAttribute="leading" secondItem="EgW-2p-dX6" secondAttribute="leading" constant="9" id="0mx-wZ-9Gn"/>
                             <constraint firstItem="w0w-LZ-Ljs" firstAttribute="centerX" secondItem="EgW-2p-dX6" secondAttribute="centerX" id="2bE-N0-XcW"/>
                             <constraint firstItem="Cp5-9a-m4D" firstAttribute="top" secondItem="sfh-jq-GRP" secondAttribute="top" id="Jav-Ah-Ywl"/>
                             <constraint firstItem="Cp5-9a-m4D" firstAttribute="leading" secondItem="EgW-2p-dX6" secondAttribute="leading" id="NQy-PZ-r5J"/>
                             <constraint firstAttribute="bottom" secondItem="Cp5-9a-m4D" secondAttribute="bottom" id="OuI-Gd-E0q"/>
                             <constraint firstItem="EgW-2p-dX6" firstAttribute="bottom" secondItem="w0w-LZ-Ljs" secondAttribute="bottom" constant="36" id="QcL-d7-cJS"/>
-                            <constraint firstItem="E0P-ad-Rht" firstAttribute="top" secondItem="EgW-2p-dX6" secondAttribute="top" constant="8" id="VXd-up-nRj"/>
+                            <constraint firstItem="E0P-ad-Rht" firstAttribute="top" secondItem="EgW-2p-dX6" secondAttribute="top" constant="9" id="VXd-up-nRj"/>
                             <constraint firstItem="EgW-2p-dX6" firstAttribute="trailing" secondItem="Cp5-9a-m4D" secondAttribute="trailing" id="tvx-nZ-ANz"/>
                         </constraints>
                     </view>
@@ -170,37 +170,10 @@
             </objects>
             <point key="canvasLocation" x="1092.753623188406" y="-121.20535714285714"/>
         </scene>
-        <!--Splash View Controller-->
-        <scene sceneID="c2K-Ri-Ojq">
-            <objects>
-                <viewController storyboardIdentifier="SplashViewController" id="JRn-Bj-BTU" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="SZK-H9-pvS">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="ukv-Pz-9no">
-                                <rect key="frame" x="170.5" y="410.5" width="73" height="75.5"/>
-                            </imageView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="ehy-kr-aXl"/>
-                        <color key="backgroundColor" name="YP Black"/>
-                        <constraints>
-                            <constraint firstItem="ukv-Pz-9no" firstAttribute="centerY" secondItem="SZK-H9-pvS" secondAttribute="centerY" id="6M1-3q-Iah"/>
-                            <constraint firstItem="ukv-Pz-9no" firstAttribute="centerX" secondItem="SZK-H9-pvS" secondAttribute="centerX" id="bu1-qM-qNS"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <segue destination="CR2-rc-Alw" kind="presentation" identifier="ShowAuthenticationScreen" modalPresentationStyle="fullScreen" id="SgY-ws-6Wt"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="wR9-fv-7bW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1555" y="1266"/>
-        </scene>
         <!--Auth View Controller-->
         <scene sceneID="jcD-X3-FfD">
             <objects>
-                <viewController id="ULu-JS-6r3" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewController" id="ULu-JS-6r3" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9fR-9W-RA7">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -230,7 +203,7 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <segue destination="R34-kU-j9v" kind="show" identifier="ShowWebView" id="BQg-YD-i29"/>
+                                    <segue destination="R34-kU-j9v" kind="presentation" identifier="ShowWebView" modalPresentationStyle="overFullScreen" id="BQg-YD-i29"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -260,7 +233,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ei3-Df-3pd">
-                                <rect key="frame" x="0.0" y="92" width="414" height="804"/>
+                                <rect key="frame" x="0.0" y="90" width="414" height="772"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -268,20 +241,34 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hwN-9Y-4et">
-                                <rect key="frame" x="0.0" y="92" width="414" height="4"/>
+                                <rect key="frame" x="0.0" y="90" width="414" height="4"/>
                                 <color key="progressTintColor" name="YP Black"/>
                             </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3u9-KE-11i">
+                                <rect key="frame" x="9" y="57" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="2mh-lv-IHX"/>
+                                    <constraint firstAttribute="width" constant="24" id="sOX-4l-wMm"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="nav_back_button"/>
+                                <connections>
+                                    <action selector="didTapBackButton:" destination="R34-kU-j9v" eventType="touchUpInside" id="abl-YN-LU4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="P9v-uf-HNz"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Ei3-Df-3pd" secondAttribute="bottom" id="7il-PT-AsL"/>
-                            <constraint firstAttribute="trailing" secondItem="Ei3-Df-3pd" secondAttribute="trailing" id="Gfi-1H-kHa"/>
-                            <constraint firstItem="P9v-uf-HNz" firstAttribute="trailing" secondItem="hwN-9Y-4et" secondAttribute="trailing" id="OoA-H4-mT6"/>
+                            <constraint firstItem="3u9-KE-11i" firstAttribute="top" secondItem="P9v-uf-HNz" secondAttribute="top" constant="9" id="407-mK-rnZ"/>
+                            <constraint firstItem="P9v-uf-HNz" firstAttribute="bottom" secondItem="Ei3-Df-3pd" secondAttribute="bottom" id="Bfm-Vd-V2C"/>
+                            <constraint firstItem="hwN-9Y-4et" firstAttribute="trailing" secondItem="P9v-uf-HNz" secondAttribute="trailing" id="Gfi-1H-kHa"/>
+                            <constraint firstItem="3u9-KE-11i" firstAttribute="leading" secondItem="P9v-uf-HNz" secondAttribute="leading" constant="9" id="Jdr-UM-xAQ"/>
+                            <constraint firstItem="P9v-uf-HNz" firstAttribute="trailing" secondItem="Ei3-Df-3pd" secondAttribute="trailing" id="OoA-H4-mT6"/>
                             <constraint firstItem="hwN-9Y-4et" firstAttribute="leading" secondItem="P9v-uf-HNz" secondAttribute="leading" id="RE2-4z-nYr"/>
-                            <constraint firstItem="Ei3-Df-3pd" firstAttribute="leading" secondItem="Q1P-Fi-Cwk" secondAttribute="leading" id="TS9-cn-TOa"/>
-                            <constraint firstItem="Ei3-Df-3pd" firstAttribute="top" secondItem="P9v-uf-HNz" secondAttribute="top" id="cyb-70-ftV"/>
-                            <constraint firstItem="hwN-9Y-4et" firstAttribute="top" secondItem="P9v-uf-HNz" secondAttribute="top" id="eHf-qw-J77"/>
+                            <constraint firstItem="Ei3-Df-3pd" firstAttribute="leading" secondItem="P9v-uf-HNz" secondAttribute="leading" id="TS9-cn-TOa"/>
+                            <constraint firstItem="Ei3-Df-3pd" firstAttribute="top" secondItem="3u9-KE-11i" secondAttribute="bottom" constant="9" id="cyb-70-ftV"/>
+                            <constraint firstItem="hwN-9Y-4et" firstAttribute="top" secondItem="3u9-KE-11i" secondAttribute="bottom" constant="9" id="eHf-qw-J77"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="uNA-ue-cpR"/>
@@ -337,8 +324,8 @@
         <image name="auth_screen_logo" width="60" height="60"/>
         <image name="backwardIcon" width="24" height="24"/>
         <image name="like_button_on" width="42" height="42"/>
+        <image name="nav_back_button" width="24" height="24"/>
         <image name="share_button" width="51" height="51"/>
-        <image name="splash_screen_logo" width="73" height="75.5"/>
         <image name="tab_editorial_active" width="30" height="30"/>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

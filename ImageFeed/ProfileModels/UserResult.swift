@@ -8,5 +8,9 @@
 import Foundation
 
 struct UserResult: Codable {
-    var profile_image: ImageURL?
+    var profileImage: ImageURL?
+    
+    enum CodingKeys: String, CodingKey {
+        case profileImage = "profile_image"
+    }
 }

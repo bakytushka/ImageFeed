@@ -56,7 +56,6 @@ final class ProfileService {
             
             self.task = nil
         } as? URLSessionDataTask
-        
         task?.resume()
     }
 }
