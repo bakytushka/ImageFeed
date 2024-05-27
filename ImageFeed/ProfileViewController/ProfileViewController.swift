@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     private var profileImageView = UIImageView()
@@ -7,19 +8,56 @@ final class ProfileViewController: UIViewController {
     private var descriptionLabel = UILabel()
     private var logoutButton: UIButton!
     
+    private let profileService = ProfileService.shared
+    private var profileImageServiceObserver : NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = UIColor(named: "YP Black")
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
         
         addProfileImageView()
         addNameLabel()
         addLoginNameLabel()
         addLogoutButton()
         addDescriptionLabel()
+        updateProfileDetails()
+    }
+    
+    private func updateAvatar() {
+        guard let profileImageURL = ProfileImageService.shared.avatarURL,
+              let url = URL(string: profileImageURL)
+        else { return }
+        
+        let cache = ImageCache.default
+        cache.clearDiskCache()
+        let processor = RoundCornerImageProcessor(cornerRadius: 42)
+        profileImageView.kf.setImage(with: url,
+                              placeholder: UIImage(named: "user_pick"),
+                              options: [.processor(processor), .transition(.fade(1))],
+                              progressBlock: nil) { result in
+            switch result {
+            case .success(let value):
+                print("Изображение успешно загружено: \(value.image)")
+            case .failure(let error):
+                print("Ошибка при загрузке изображения: \(error)")
+            }
+        }
+        
     }
     
     private func addProfileImageView() {
-        profileImageView.image = UIImage(named: "profile_image")
-        
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(profileImageView)
         
@@ -94,5 +132,13 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapButton() {
+    }
+    
+    func updateProfileDetails() {
+        guard let profile = profileService.profile else { return }
+        
+        nameLabel.text = profile.name
+        loginNameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
     }
 }

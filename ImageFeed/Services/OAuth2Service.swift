@@ -8,9 +8,19 @@
 import Foundation
 import UIKit
 
+
+enum AuthServiceError: Error {
+    case invalidRequest
+}
+
 final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
+    
+    private let urlSession = URLSession.shared
+    
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         let urlString = "https://unsplash.com/oauth/token" +
@@ -21,7 +31,7 @@ final class OAuth2Service {
         "&grant_type=\(Constants.grandType)"
         
         guard let url = URL(string: urlString) else {
-            print("Failed to create URL with baseURL and parameters.")
+            assertionFailure("Failed to create URL")
             return nil
         }
         var request = URLRequest(url: url)
@@ -30,7 +40,21 @@ final class OAuth2Service {
     }
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String,Error>) -> Void) {
-        guard let urlRequest = makeOAuthTokenRequest(code: code) else { return }
+        assert(Thread.isMainThread)
+        guard lastCode != code else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        
+        task?.cancel()
+        lastCode = code
+        
+        guard let urlRequest = makeOAuthTokenRequest(code: code)
+        else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        
         let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
                 DispatchQueue.main.async {
@@ -66,9 +90,25 @@ final class OAuth2Service {
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
+                self.task = nil
+                self.lastCode = nil
             }
         }
+        self.task = task
         task.resume()
+    }
+}
+
+extension URLRequest {
+    static func makeHTTPRequest(
+        path: String,
+        httpMethod: String,
+        baseURL: URL? = Constants.defaultBaseURL
+    ) -> URLRequest? {
+        guard let url = URL(string: path, relativeTo: baseURL) else { return nil }
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod
+        return request
     }
 }
 

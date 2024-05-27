@@ -80,6 +80,9 @@ final class WebViewViewController: UIViewController {
         let request = URLRequest(url: url)
         webView.load(request)
     }
+    @IBAction func didTapBackButton(_ sender: Any) {
+        delegate?.webViewViewControllerDidCancel(self)
+    }
 }
 
 extension WebViewViewController: WKNavigationDelegate {
