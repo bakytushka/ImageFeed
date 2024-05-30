@@ -14,6 +14,8 @@ final class ImagesListService {
     private var task: URLSessionTask?
     private var oauth2TokenStorage = OAuth2TokenStorage()
     
+    static let shared = ImagesListService()
+    
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
 
     func fetchPhotosNextPage() {
@@ -41,6 +43,51 @@ final class ImagesListService {
                 print("[ImagesListService]: \(error.localizedDescription) \(request)")
             }
         }
+    }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<LikePhotoResult, Error>) -> Void) {
+        guard let request = createLikeURLRequest(id: photoId, isLike: isLike) else { return }
+        task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<LikePhotoResult, Error>)  in
+            guard let self = self else { return }
+            switch response {
+            case .success(let body):
+                DispatchQueue.main.async {
+                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                        let photo = self.photos[index]
+                        let newPhoto = Photo(
+                            id: photo.id,
+                            size: photo.size,
+                            createdAt: photo.createdAt,
+                            welcomeDiscription: photo.welcomeDiscription,
+                            thumbImageURL: photo.thumbImageURL,
+                            largeImageURL: photo.largeImageURL,
+                            isLiked: body.photo.likedByUser
+                        )
+                        self.photos[index] = newPhoto
+                    }
+                }
+                completion(.success(body))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    private func createLikeURLRequest(id: String, isLike: Bool) -> URLRequest? {
+        
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "api.unsplash.com"
+        urlComponents.path = "/photos/\(id)/like"
+        guard let url = urlComponents.url else { return nil }
+        var request = URLRequest(url: url)
+        if isLike {
+            request.httpMethod = "DELETE"
+        } else { request.httpMethod = "POST" }
+        if let token = oauth2TokenStorage.token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        return request
     }
     
     private func createURLRequest(page: Int) -> URLRequest? {

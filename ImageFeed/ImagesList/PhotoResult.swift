@@ -27,3 +27,8 @@ struct PhotoResult: Decodable {
     }
 }
 
+    struct LikePhotoResult: Decodable {
+        let photo: PhotoResult
+}
+
+

@@ -8,6 +8,8 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    var imageUrl: URL?
+    
     @IBOutlet private var singleImageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -16,7 +18,8 @@ final class SingleImageViewController: UIViewController {
         
         scrollView.minimumZoomScale = 1
         scrollView.maximumZoomScale = 3
-        singleImageView.image = image
+        setSingleImage()
+       // scrollView.delegate = self
         
         let doubleTapRecognizer = UITapGestureRecognizer(
             target: self,
@@ -25,6 +28,42 @@ final class SingleImageViewController: UIViewController {
         
         doubleTapRecognizer.numberOfTapsRequired = 2
         scrollView.addGestureRecognizer(doubleTapRecognizer)
+    }
+    
+    func setSingleImage() {
+        UIBlockingProgressHUD.show()
+        singleImageView.kf.setImage(with: imageUrl) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                self.image = imageResult.image
+            case .failure:
+                self.showError()
+            }
+        }
+    }
+    
+    private func showError() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так.",
+            message: "Попробовать ещё раз?",
+            preferredStyle: .alert
+        )
+        let cancel = UIAlertAction(
+            title: "Не надо",
+            style: .default
+        )
+        let action = UIAlertAction(
+            title: "Повторить",
+            style: .default
+        ) { _ in
+            self.setSingleImage()
+        }
+        alertController.addAction(action)
+        alertController.addAction(cancel)
+        present(alertController, animated: true)
     }
     
     @IBAction private func didTapBackButton(_ sender: Any) {
