@@ -1,4 +1,6 @@
 import UIKit
+import ProgressHUD
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     var image: UIImage! {

@@ -15,16 +15,24 @@ final class ImagesListService {
     private var oauth2TokenStorage = OAuth2TokenStorage()
     
     static let shared = ImagesListService()
-    
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
-
+    
+    
+    private lazy var iso8601Formatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        return formatter
+    }()
+    
+    
+    
     func fetchPhotosNextPage() {
         let nextPage = (lastLoadedPage ?? 0) + 1
-        guard let request = createURLRequest(page: nextPage) else { return }
+        guard let request = createURLRequest(page: nextPage),
+              task == nil
+        else { return }
         assert(Thread.isMainThread)
-        if task != nil { return }
         
-        task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<[PhotoResult], Error>)  in
+            task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<[PhotoResult], Error>)  in
             guard let self = self else { return }
             switch response {
             case .success(let body):
@@ -46,8 +54,13 @@ final class ImagesListService {
     }
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<LikePhotoResult, Error>) -> Void) {
-        guard let request = createLikeURLRequest(id: photoId, isLike: isLike) else { return }
-        task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<LikePhotoResult, Error>)  in
+        assert(Thread.isMainThread)
+        
+        guard let request = createLikeURLRequest(id: photoId, isLike: isLike) else {
+            assertionFailure("Invalid request")
+            return
+        }
+             task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<LikePhotoResult, Error>)  in
             guard let self = self else { return }
             switch response {
             case .success(let body):
@@ -91,7 +104,6 @@ final class ImagesListService {
     }
     
     private func createURLRequest(page: Int) -> URLRequest? {
-        
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "api.unsplash.com"
@@ -99,28 +111,24 @@ final class ImagesListService {
         urlComponents.queryItems = [
             URLQueryItem(name: "page", value: String(page)),
         ]
-        
         guard let url = urlComponents.url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if let token = oauth2TokenStorage.token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        print(url)
         return request
     }
     
     private func convertToPhoto(_ photoResult: PhotoResult) -> Photo {
-        let dateFormatter = DateFormatter()
         let result = Photo(
             id: photoResult.id,
             size: CGSize(width: photoResult.width, height: photoResult.height),
-            createdAt: dateFormatter.date(from: photoResult.createdAt ?? ""), // - Проверить что дата норм форматируется
+            createdAt: self.iso8601Formatter.date(from: photoResult.created ?? ""),
             welcomeDiscription: photoResult.description,
-            thumbImageURL: photoResult.urls.thumb,
+            thumbImageURL: photoResult.urls.small,
             largeImageURL: photoResult.urls.full,
             isLiked: photoResult.likedByUser)
         return result
     }
 }
-

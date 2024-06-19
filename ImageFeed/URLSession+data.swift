@@ -26,7 +26,9 @@ extension URLSession {
         }
         
         let task = dataTask(with: request, completionHandler: { data, response, error in
-            if let data = data,
+     //   let session = URLSession.shared
+     //   let task = session.dataTask(with: request, completionHandler: { data, response, error in
+        if let data = data,
                let response = response,
                let statusCode = (response as? HTTPURLResponse)?.statusCode
             {

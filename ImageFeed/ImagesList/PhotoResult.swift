@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct PhotoResult: Decodable {
-    let id: String
-    let width: Int
-    let height: Int
-    let createdAt: String?
-    let description: String?
-    let urls: UrlsResult
-    let likedByUser: Bool
+struct PhotoResult: Codable {
+    var id: String
+    var width: Int
+    var height: Int
+    var created: String?
+    var description: String?
+    var urls: UrlsResult
+    var likedByUser: Bool
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case width = "width"
         case height = "height"
-        case createdAt = "created_at"
+        case created = "created_at"
         case description = "description"
         case urls = "urls"
         case likedByUser = "liked_by_user"
@@ -30,5 +30,4 @@ struct PhotoResult: Decodable {
     struct LikePhotoResult: Decodable {
         let photo: PhotoResult
 }
-
 
