@@ -7,11 +7,12 @@
 
 import Foundation
 
-struct PhotoResult: Codable {
+let isoDateFormatter = ISO8601DateFormatter()
+struct PhotoResult: Decodable {
     var id: String
     var width: Int
     var height: Int
-    var created: String?
+    var createdAt: String?
     var description: String?
     var urls: UrlsResult
     var likedByUser: Bool
@@ -20,14 +21,18 @@ struct PhotoResult: Codable {
         case id = "id"
         case width = "width"
         case height = "height"
-        case created = "created_at"
+        case createdAt = "created_at"
         case description = "description"
         case urls = "urls"
         case likedByUser = "liked_by_user"
     }
+
+    var dateCreatedAt: Date?{
+        guard let createdAtString = createdAt else {return nil}
+        return isoDateFormatter.date(from: createdAtString)
+    }
 }
 
-    struct LikePhotoResult: Decodable {
-        let photo: PhotoResult
+struct LikePhotoResult: Decodable {
+    let photo: PhotoResult
 }
-

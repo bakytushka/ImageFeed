@@ -15,8 +15,8 @@ final class ProfileLogoutService {
     
     func logout() {
         cleanCookies()
-        clearToken()
-        clearProfileData()
+        resetToken()
+        resetPhotos()
     }
     
     private func cleanCookies() {
@@ -27,16 +27,16 @@ final class ProfileLogoutService {
             }
         }
     }
-    private func clearToken() {
-        OAuth2TokenStorage.shared.token = nil
+    
+    func resetPhotos() {
+        ImagesListService.shared.clearPhotos()
     }
     
-    private func clearProfileData() {
-        ProfileService.shared.profile = nil
-    }
-    
-    private func clearAvatarData() {
-        ProfileImageService.shared.clearAvatarURL()
+    private func resetToken() {
+        guard OAuth2TokenStorage.shared.removeToken() else {
+            assertionFailure("Cannot remove token")
+            return
+        }
     }
 }
 

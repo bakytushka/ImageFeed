@@ -25,19 +25,9 @@ final class ImagesListCell: UITableViewCell {
         self.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "stub"))
     }
     
- /*   func setIsLiked(_ curentLike: Bool) {
-        likeButton.setImage(UIImage(named: curentLike ? "like_button_on" : "like_button_off"), for: .normal)
-    } */
-    
     func setIsLiked(_ isLiked: Bool) {
         let likeImage = isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
         likeButton.setImage(likeImage, for: .normal)
-    }
-    
-    func configure(dateText: String, isLiked: Bool) {
-        self.dateLabel.text = dateText
-        let likeImage = isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
-        self.likeButton.setImage(likeImage, for: .normal)
     }
     
     @IBAction func likeButtonClicked(_ sender: Any) {

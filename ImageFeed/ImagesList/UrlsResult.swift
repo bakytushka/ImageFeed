@@ -7,10 +7,15 @@
 
 import Foundation
 
-struct UrlsResult: Codable {
-    var raw: String
-    var full: String
-    var regular: String
-    var small: String
-    var thumb: String
+struct UrlsResult: Decodable {
+    let large: String
+    let thumb: String
+    
+    enum CodingKeys: String, CodingKey {
+        case large = "full"
+        case thumb
+    }
 }
+
+
+

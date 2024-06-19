@@ -17,118 +17,106 @@ final class ImagesListService {
     static let shared = ImagesListService()
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
-    
-    private lazy var iso8601Formatter: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        return formatter
-    }()
-    
-    
-    
     func fetchPhotosNextPage() {
-        let nextPage = (lastLoadedPage ?? 0) + 1
-        guard let request = createURLRequest(page: nextPage),
-              task == nil
-        else { return }
         assert(Thread.isMainThread)
-        
-            task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<[PhotoResult], Error>)  in
-            guard let self = self else { return }
-            switch response {
-            case .success(let body):
-                DispatchQueue.main.async {
-                    var photos: [Photo] = []
-                    body.forEach { photo in
-                        photos.append(self.convertToPhoto(photo))
-                    }
-                    self.photos += photos
-                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
-                }
-                self.task = nil
-                self.lastLoadedPage = nextPage
-            case .failure(let error):
-                self.task = nil
-                print("[ImagesListService]: \(error.localizedDescription) \(request)")
-            }
-        }
-    }
-    
-    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<LikePhotoResult, Error>) -> Void) {
-        assert(Thread.isMainThread)
-        
-        guard let request = createLikeURLRequest(id: photoId, isLike: isLike) else {
-            assertionFailure("Invalid request")
+        guard task == nil else {
+            print("Loading in progress")
             return
         }
-             task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<LikePhotoResult, Error>)  in
-            guard let self = self else { return }
-            switch response {
-            case .success(let body):
-                DispatchQueue.main.async {
-                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                        let photo = self.photos[index]
-                        let newPhoto = Photo(
-                            id: photo.id,
-                            size: photo.size,
-                            createdAt: photo.createdAt,
-                            welcomeDiscription: photo.welcomeDiscription,
-                            thumbImageURL: photo.thumbImageURL,
-                            largeImageURL: photo.largeImageURL,
-                            isLiked: body.photo.likedByUser
-                        )
-                        self.photos[index] = newPhoto
-                    }
+        let nextPage = (lastLoadedPage ?? 0) + 1
+        guard let request = createURLRequest(page: nextPage) else {
+            print("Error forming request")
+            return
+        }
+        task = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success(let photoResults):
+                    let newPhotos = photoResults.map({Photo(photo: $0)})
+                    self.photos.append(contentsOf: newPhotos)
+                    self.lastLoadedPage = nextPage
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(
+                            name: ImagesListService.didChangeNotification,
+                            object: self,
+                            userInfo: ["Photos": self.photos]
+                        )}
+                case .failure(let error):
+                    print("Failed to fetch photos \(error)")
                 }
-                completion(.success(body))
-            case .failure(let error):
-                completion(.failure(error))
+                self.task = nil
             }
         }
+        task?.resume()
+    }
+    
+    func changeLike(
+        photoId: String,
+        isLike: Bool,
+        _ completion: @escaping (Result<Void, Error>) -> Void) {
+            assert(Thread.isMainThread)
+            
+            guard let request = createLikeURLRequest(id: photoId, isLike: isLike) else {
+                assertionFailure("Invalid request")
+                return
+            }
+            task = urlSession.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    switch result {
+                    case .success:
+                        if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                            let photo = self.photos[index]
+                            let newPhoto = Photo(
+                                id: photo.id,
+                                size: photo.size,
+                                createdAt: photo.createdAt,
+                                welcomeDescription: photo.welcomeDiscription,
+                                largeImageURL: photo.largeImageURL,
+                                thumbImageURL: photo.thumbImageURL,
+                                isLiked: !photo.isLiked
+                            )
+                            self.photos[index] = newPhoto
+                        }
+                        completion(.success(()))
+                    case .failure(let error):
+                        print("Failed to change like status: \(error)")
+                    }
+                    self.task = nil
+                }
+            }
+            task?.resume()
+        }
+    
+    func clearPhotos() {
+        photos = []
     }
     
     private func createLikeURLRequest(id: String, isLike: Bool) -> URLRequest? {
-        
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.unsplash.com"
-        urlComponents.path = "/photos/\(id)/like"
-        guard let url = urlComponents.url else { return nil }
-        var request = URLRequest(url: url)
-        if isLike {
-            request.httpMethod = "DELETE"
-        } else { request.httpMethod = "POST" }
-        if let token = oauth2TokenStorage.token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        guard let token = oauth2TokenStorage.token else {
+            return nil
         }
+        var request = URLRequest.makeHTTPRequest(
+            path: "/photos/\(id)/like",
+            httpMethod: isLike ? "POST" : "DELETE",
+            baseURL: Constants.defaultBaseURL
+        )
+        request?.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
         return request
     }
     
     private func createURLRequest(page: Int) -> URLRequest? {
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.unsplash.com"
-        urlComponents.path = "/photos"
-        urlComponents.queryItems = [
-            URLQueryItem(name: "page", value: String(page)),
-        ]
-        guard let url = urlComponents.url else { return nil }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        if let token = oauth2TokenStorage.token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        guard let token = oauth2TokenStorage.token else {
+            return nil
         }
+        var request = URLRequest.makeHTTPRequest(
+            path: "/photos?page=\(page)",
+            httpMethod: "GET",
+            baseURL: Constants.defaultBaseURL
+        )
+        request?.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
-    }
-    
-    private func convertToPhoto(_ photoResult: PhotoResult) -> Photo {
-        let result = Photo(
-            id: photoResult.id,
-            size: CGSize(width: photoResult.width, height: photoResult.height),
-            createdAt: self.iso8601Formatter.date(from: photoResult.created ?? ""),
-            welcomeDiscription: photoResult.description,
-            thumbImageURL: photoResult.urls.small,
-            largeImageURL: photoResult.urls.full,
-            isLiked: photoResult.likedByUser)
-        return result
     }
 }

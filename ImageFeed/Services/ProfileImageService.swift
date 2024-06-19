@@ -18,14 +18,16 @@ final class ProfileImageService {
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     func fetchProfileImageURL(username: String, token: String, _ completion: @escaping (Result<String, Error>) -> Void) {
-        guard let request = createURLRequest(username: username, token: token) else { return }
-        
-        assert(Thread.isMainThread)
-        
+        guard let request = createURLRequest(username: username, token: token) else {
+            
+            let error = NetworkError.badURL
+            print("[fetchProfileImageURL]: \(error) - username: \(username), token: \(token)")
+            completion(.failure(error))
+            return
+        }
         if task != nil {
             task?.cancel()
         }
-        
         task = URLSession.shared.objectTask(for: request) { [weak self] (response: Result<UserResult, Error>)  in
             
             self?.task = nil
@@ -50,10 +52,6 @@ final class ProfileImageService {
             }
         }
         task?.resume()
-    }
-    
-    func clearAvatarURL() {
-        avatarURL = nil
     }
     
     private func createURLRequest(username: String, token: String) -> URLRequest? {

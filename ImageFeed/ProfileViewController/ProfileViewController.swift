@@ -54,7 +54,6 @@ final class ProfileViewController: UIViewController {
                 print("Ошибка при загрузке изображения: \(error)")
             }
         }
-        
     }
     
     private func addProfileImageView() {
@@ -147,7 +146,7 @@ final class ProfileViewController: UIViewController {
     
     private func performLogout() {
         ProfileLogoutService.shared.logout()
-        guard let window = UIApplication.shared.windows.first else { return }
+        guard let window = UIApplication.shared.windows.first else { preconditionFailure("Invalid Configuration")}
         let splashVC = SplashViewController()
         window.rootViewController = splashVC
     }

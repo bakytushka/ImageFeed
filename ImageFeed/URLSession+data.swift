@@ -12,9 +12,10 @@ enum NetworkError: Error {
     case httpStatusCode(Int)
     case urlRequestError(Error)
     case urlSessionError
+    case badURL
 }
 
-extension URLSession {
+    extension URLSession {
     func objectTask<T: Decodable>(
         for request: URLRequest,
         completion: @escaping (Result<T, Error>) -> Void
@@ -26,8 +27,6 @@ extension URLSession {
         }
         
         let task = dataTask(with: request, completionHandler: { data, response, error in
-     //   let session = URLSession.shared
-     //   let task = session.dataTask(with: request, completionHandler: { data, response, error in
         if let data = data,
                let response = response,
                let statusCode = (response as? HTTPURLResponse)?.statusCode
