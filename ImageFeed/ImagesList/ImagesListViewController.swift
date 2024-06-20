@@ -2,13 +2,18 @@ import UIKit
 import Kingfisher
 import ProgressHUD
 
+protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListViewPresenterProtocol? { get set }
+    func updateTableViewAnimated()
+}
 
 
-final class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     
     @IBOutlet private var tableView: UITableView!
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    var presenter: ImagesListViewPresenterProtocol?
     
     private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
@@ -29,8 +34,11 @@ final class ImagesListViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        configureNotificationObserver()
-        imagesListService.fetchPhotosNextPage()
+    //    configureNotificationObserver()
+    //    imagesListService.fetchPhotosNextPage()
+    //    presenter?.fetchPhotos()
+        presenter = ImageListViewPresenter(view: self)
+        presenter?.viewDidLoad()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -58,13 +66,13 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
-    private func configureNotificationObserver() {
+  /*  private func configureNotificationObserver() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateTableViewAnimated),
             name: ImagesListService.didChangeNotification,
             object: nil
-        )}
+        )} */
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         if let url = URL(string: imagesListService.photos[indexPath.row].thumbImageURL) {
@@ -117,7 +125,8 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            imagesListService.fetchPhotosNextPage()
+    //        imagesListService.fetchPhotosNextPage()
+            presenter?.fetchPhotos()
         }
     }
     
