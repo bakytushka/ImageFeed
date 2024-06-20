@@ -26,4 +26,8 @@ final class OAuth2TokenStorage {
     }
     
     static let shared = OAuth2TokenStorage()
+    
+    func removeToken() -> Bool {
+        KeychainWrapper.standard.removeObject(forKey: tokenKey)
+    }
 }

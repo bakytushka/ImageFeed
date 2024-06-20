@@ -44,9 +44,9 @@ final class ProfileViewController: UIViewController {
         cache.clearDiskCache()
         let processor = RoundCornerImageProcessor(cornerRadius: 42)
         profileImageView.kf.setImage(with: url,
-                              placeholder: UIImage(named: "user_pick"),
-                              options: [.processor(processor), .transition(.fade(1))],
-                              progressBlock: nil) { result in
+                                     placeholder: UIImage(named: "user_pick"),
+                                     options: [.processor(processor), .transition(.fade(1))],
+                                     progressBlock: nil) { result in
             switch result {
             case .success(let value):
                 print("Изображение успешно загружено: \(value.image)")
@@ -54,7 +54,6 @@ final class ProfileViewController: UIViewController {
                 print("Ошибка при загрузке изображения: \(error)")
             }
         }
-        
     }
     
     private func addProfileImageView() {
@@ -132,6 +131,24 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapButton() {
+        showLogoutConfirmationAlert()
+    }
+    
+    private func showLogoutConfirmationAlert() {
+        let alert = UIAlertController(title: "Пока пока!", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Да", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.performLogout()
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func performLogout() {
+        ProfileLogoutService.shared.logout()
+        guard let window = UIApplication.shared.windows.first else { preconditionFailure("Invalid Configuration")}
+        let splashVC = SplashViewController()
+        window.rootViewController = splashVC
     }
     
     func updateProfileDetails() {
