@@ -100,11 +100,6 @@ final class WebViewTests: XCTestCase {
     }
 }
 
-
-
-import ImageFeed
-import Foundation
-
 final class WebViewPresenterSpy: WebViewPresenterProtocol {
     var viewDidLoadCalled: Bool = false
     var view: WebViewViewControllerProtocol?
@@ -121,10 +116,6 @@ final class WebViewPresenterSpy: WebViewPresenterProtocol {
         return nil
     }
 }
-
-
-import ImageFeed
-import Foundation
 
 final class WebViewViewControllerSpy: WebViewViewControllerProtocol {
     var presenter: ImageFeed.WebViewPresenterProtocol?

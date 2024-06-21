@@ -10,10 +10,10 @@ import XCTest
 
 final class ProfileTests: XCTestCase {
     
-    func testShowAlert() {
+    func testshowAlertCalled() {
         // Given
         let spy = ProfileViewControllerSpy()
-        let alertController = UIAlertController(title: "Test Alert", message: "This is a test alert", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Тест", message: "Это тест", preferredStyle: .alert)
         
         // When
         spy.showAlert(alert: alertController)
