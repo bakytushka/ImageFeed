@@ -41,7 +41,6 @@ final class AuthHelper: AuthHelperProtocol {
         return urlComponents.url
     }
     
-    
     func code(from url: URL) -> String? {
         if let urlComponents = URLComponents(string: url.absoluteString),
            urlComponents.path == "/oauth/authorize/native",
@@ -53,6 +52,4 @@ final class AuthHelper: AuthHelperProtocol {
             return nil
         }
     }
-    
-    
 }

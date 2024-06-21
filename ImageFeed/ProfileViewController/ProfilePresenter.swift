@@ -27,8 +27,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.view = view
     }
     
- 
-    
     func viewDidLoad() {
         setProfileImageServiceObserver()
     }
@@ -46,13 +44,12 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
     
     func showLogoutConfirmationAlert() {
-        let alert = UIAlertController(title: "Пока пока!", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Пока, пока!", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Да", style: .destructive, handler: { [weak self] _ in
             guard let self = self else { return }
             self.performLogout()
         }))
-  //      present(alert, animated: true, completion: nil)
         view?.showAlert(alert: alert)
     }
     

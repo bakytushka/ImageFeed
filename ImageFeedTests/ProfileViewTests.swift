@@ -21,51 +21,6 @@ final class ProfileTests: XCTestCase {
         // Then
         XCTAssertTrue(spy.showAlertCalled)
     }
-    
-    /* func testViewControllerCallsUpdateProfileDetailes() {
-     let viewController = ProfileViewController()
-     let presenter = ProfilePresenterSpy()
-     viewController.presenter = presenter
-     presenter.view = viewController
-     
-     _ = viewController.view
-     
-     XCTAssertTrue(presenter.viewDidloadCalled)
-     }
-     } */
- /*   func testViewControllerCallsViewDidLoad() {
-        let viewController = ProfileViewController()
-        let presenter = ProfilePresenterSpy()
-        viewController.presenter = presenter
-        presenter.view = viewController
-        
-        _ = viewController.view
-        
-        XCTAssertTrue(presenter.viewDidLoadCalled)
-    } */
-  /*  func testViewControllerCallsViewDidLoad() {
-        //given
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let viewController = storyboard.instantiateViewController(withIdentifier: "WebViewViewController") as! WebViewViewController
-        let presenter = WebViewPresenterSpy()
-        viewController.presenter = presenter
-        presenter.view = viewController
-        
-        //when
-        _ = viewController.view
-        
-        //then
-        XCTAssertTrue(presenter.viewDidLoadCalled) //behaviour verification
-    }
-        
-        func testViewControllerCallsViewDidLoadllll() {
-            let viewController = ProfileViewController()
-            let presenter = ProfilePresenterSpy()
-            viewController.presenter = presenter
-            presenter.view = viewController
-            _ = viewController.view
-            XCTAssertTrue(presenter.viewDidLoadCalled)
-        } */
 }
 
 final class ProfilePresenterSpy: ProfilePresenterProtocol {

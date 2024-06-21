@@ -34,16 +34,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         let presenter = ProfilePresenter(view: self)
         self.presenter = presenter
         presenter.viewDidLoad()
-        
-   /*     profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            } */
+    
         updateAvatar()
         
         addProfileImageView()
@@ -56,7 +47,6 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     func updateAvatar() {
         
-        //  ЗДЕСЬ ЕСТЬ ДОПОЛНИТЕЛЬНЫЕ СТРОКИ
         guard let profileImageURL = ProfileImageService.shared.avatarURL,
               let url = URL(string: profileImageURL)
         else { return }
@@ -93,6 +83,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         nameLabel.text = "Екатерина Новикова"
         nameLabel.textColor = UIColor(named: "YP White")
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
+        nameLabel.accessibilityIdentifier = "Username"
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
@@ -107,6 +98,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         loginNameLabel.text = "@ekaterina_nov"
         loginNameLabel.textColor = UIColor(named: "YP Gray")
         loginNameLabel.font = UIFont.systemFont(ofSize: 13)
+        loginNameLabel.accessibilityIdentifier = "@username"
         
         loginNameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginNameLabel)
@@ -137,7 +129,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
             target: self,
             action: #selector(didTapButton)
         )
-        
+        logoutButton.accessibilityIdentifier = "logoutButton"
         logoutButton.tintColor = UIColor(named: "YP Red")
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
@@ -152,28 +144,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     @objc
     private func didTapButton() {
-   //     showLogoutConfirmationAlert()
-        
         presenter?.showLogoutConfirmationAlert()
     }
-    
- /*       private func showLogoutConfirmationAlert() {
-        let alert = UIAlertController(title: "Пока пока!", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Да", style: .destructive, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.performLogout()
-        }))
-        present(alert, animated: true, completion: nil)
-    } */
-    
- /*   private func performLogout() {
-    //    ProfileViewPresenter.shared.logout()
-        ProfileLogoutService.shared.logout()
-        guard let window = UIApplication.shared.windows.first else { preconditionFailure("Invalid Configuration")}
-        let splashVC = SplashViewController()
-        window.rootViewController = splashVC
-    } */
     
     func updateProfileDetails() {
         guard let profile = profileService.profile else { return }
@@ -182,7 +154,6 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         loginNameLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
     }
-    
     
     func showAlert(alert: UIAlertController) {
         self.present(alert, animated: true)
