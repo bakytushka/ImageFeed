@@ -15,6 +15,7 @@ final class ImagesListService {
     private var oauth2TokenStorage = OAuth2TokenStorage()
     
     static let shared = ImagesListService()
+  //  private let shared = ImagesListService()
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
     func fetchPhotosNextPage() {

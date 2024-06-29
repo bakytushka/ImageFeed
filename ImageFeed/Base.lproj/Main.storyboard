@@ -40,6 +40,7 @@
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DI1-vm-5CX" userLabel="Like Button">
                                                     <rect key="frame" x="356" y="4" width="42" height="42"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="like _button"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" title="" image="like_button_off"/>
                                                     <connections>
@@ -131,6 +132,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E0P-ad-Rht" userLabel="Back Button">
                                 <rect key="frame" x="9" y="57" width="24" height="24"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Back_button"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="LjD-DG-Rnm"/>
                                     <constraint firstAttribute="width" constant="24" id="YLe-1k-sly"/>
@@ -191,6 +193,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GRE-yx-OqF">
                                 <rect key="frame" x="16" y="724" width="382" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="w2K-bM-Yd0"/>
                                 </constraints>
@@ -230,7 +233,7 @@
         <!--Web View View Controller-->
         <scene sceneID="42h-uF-Of1">
             <objects>
-                <viewController id="R34-kU-j9v" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="R34-kU-j9v" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Q1P-Fi-Cwk" customClass="WebViewViewController.s">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

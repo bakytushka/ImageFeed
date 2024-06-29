@@ -22,7 +22,8 @@ final class ImagesListCell: UITableViewCell {
     func setImage(url: String) {
         guard let url = URL(string: url) else { return }
         cellImage.kf.indicatorType = .activity
-        self.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "stub"))
+        cellImage.kf.setImage(with: url, placeholder: UIImage(named: "stub"))
+     //   self.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "stub"))
     }
     
     func setIsLiked(_ isLiked: Bool) {

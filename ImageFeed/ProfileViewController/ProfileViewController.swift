@@ -1,7 +1,22 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateAvatar()
+    func showAlert(alert: UIAlertController)
+}
+    
+    
+    
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+    
+ 
+    var presenter: ProfilePresenterProtocol?
+    private let profileImageService = ProfileImageService.shared
+    
+    
     private var profileImageView = UIImageView()
     private var nameLabel = UILabel()
     private var loginNameLabel = UILabel()
@@ -16,15 +31,10 @@ final class ProfileViewController: UIViewController {
         
         view.backgroundColor = UIColor(named: "YP Black")
         
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
+        let presenter = ProfilePresenter(view: self)
+        self.presenter = presenter
+        presenter.viewDidLoad()
+    
         updateAvatar()
         
         addProfileImageView()
@@ -35,7 +45,8 @@ final class ProfileViewController: UIViewController {
         updateProfileDetails()
     }
     
-    private func updateAvatar() {
+    func updateAvatar() {
+        
         guard let profileImageURL = ProfileImageService.shared.avatarURL,
               let url = URL(string: profileImageURL)
         else { return }
@@ -72,6 +83,7 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = "Екатерина Новикова"
         nameLabel.textColor = UIColor(named: "YP White")
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
+        nameLabel.accessibilityIdentifier = "Username"
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
@@ -86,6 +98,7 @@ final class ProfileViewController: UIViewController {
         loginNameLabel.text = "@ekaterina_nov"
         loginNameLabel.textColor = UIColor(named: "YP Gray")
         loginNameLabel.font = UIFont.systemFont(ofSize: 13)
+        loginNameLabel.accessibilityIdentifier = "@username"
         
         loginNameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginNameLabel)
@@ -116,7 +129,7 @@ final class ProfileViewController: UIViewController {
             target: self,
             action: #selector(didTapButton)
         )
-        
+        logoutButton.accessibilityIdentifier = "logoutButton"
         logoutButton.tintColor = UIColor(named: "YP Red")
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
@@ -131,24 +144,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapButton() {
-        showLogoutConfirmationAlert()
-    }
-    
-    private func showLogoutConfirmationAlert() {
-        let alert = UIAlertController(title: "Пока пока!", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Да", style: .destructive, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.performLogout()
-        }))
-        present(alert, animated: true, completion: nil)
-    }
-    
-    private func performLogout() {
-        ProfileLogoutService.shared.logout()
-        guard let window = UIApplication.shared.windows.first else { preconditionFailure("Invalid Configuration")}
-        let splashVC = SplashViewController()
-        window.rootViewController = splashVC
+        presenter?.showLogoutConfirmationAlert()
     }
     
     func updateProfileDetails() {
@@ -157,5 +153,9 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = profile.name
         loginNameLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
+    }
+    
+    func showAlert(alert: UIAlertController) {
+        self.present(alert, animated: true)
     }
 }
